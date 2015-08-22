@@ -68,10 +68,7 @@ Create the packaged certificate files (they are just combinations of the certs).
 
 ```bash
 # chained certificates
-cat signed_certificate.crt intermediate.crt > chained.pem
-
-# dhparam file (NOTE: this sometimes takes over an hour)
-openssl dhparam -out dhparam.pem 4096
+cat signed_certificate.pem intermediate.pem > chained.pem
 ```
 
 #### Step 6
@@ -81,7 +78,6 @@ Copy the key and certificates to your server.
 ```bash
 scp private_key.pem root@txlfhttps.com:/etc/nginx/private_key.pem
 scp chained.pem root@txlfhttps.com:/etc/nginx/chained.pem
-scp dhparam.pem root@txlfhttps.com:/etc/nginx/dhparam.pem
 ```
 
 #### Step 7
@@ -122,7 +118,6 @@ server {
   ssl_session_timeout 1d;
   ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
   ssl_ciphers ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA;
-  ssl_dhparam dhparam.pem;
   ssl_session_cache shared:SSL:50m;
   ssl_prefer_server_ciphers on;
   ssl_stapling on;
